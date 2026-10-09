@@ -5,12 +5,17 @@ $recepient = "youmail@ya.ru";
 $sitename  = "Название Сайта";
 $subject   = "Новая заявка с сайта \"$sitename\"";
 
-$name = trim($_POST["name"]);
+$name = htmlspecialchars(trim($_POST["name"]), ENT_QUOTES, "UTF-8");
 $email = trim($_POST["email"]);
-$message = trim($_POST["message"]);
+$message = htmlspecialchars(trim($_POST["message"]), ENT_QUOTES, "UTF-8");
+
+// Адрес уходит в заголовки From/Reply-To: без проверки через \r\n можно дописать свои заголовки
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+	exit;
+}
 
 $message = "
-E-mail: $email <br>
+E-mail: " . htmlspecialchars($email, ENT_QUOTES, "UTF-8") . " <br>
 Имя: $name <br>
 Сообщение: $message
 ";
